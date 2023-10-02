@@ -1,0 +1,28 @@
+permissions:
+  scopes:
+    - read:jira-work
+    - write:jira-work
+    - storage:app
+  external:
+    fetch:
+      backend:
+        - https://api.openai.com
+modules:
+  jira:issueGlance:
+    - key: testcase-validator-glance
+      function: checklist
+      title: testcase validator
+      description: testcase validator
+      label: testcase validator
+  trigger:
+    - key: testgenai-casegen
+      function: testgen
+      events:
+        - avi:jira:updated:issue
+  function:
+    - key: testgen
+      handler: testgen.run
+    - key: checklist
+      handler: checklist.run
+app:
+  id: ari:cloud:ecosystem::app/5218dcc8-b35d-40ab-8224-655c4de8b904
