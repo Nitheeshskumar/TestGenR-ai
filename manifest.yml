@@ -7,13 +7,17 @@ permissions:
     fetch:
       backend:
         - https://api.openai.com
+  content:
+    styles:
+      - "unsafe-inline"
 modules:
-  jira:issueGlance:
+  jira:issuePanel:
     - key: testcase-validator-glance
-      function: checklist
+      resource: testgenUI
       title: testcase validator
       description: testcase validator
       label: testcase validator
+      icon: https://developer.atlassian.com/platform/forge/images/icons/issue-panel-icon.svg
   trigger:
     - key: testgenai-casegen
       function: testgen
@@ -24,5 +28,9 @@ modules:
       handler: testgen.run
     - key: checklist
       handler: checklist.run
+resources:
+  - key: testgenUI
+    path: static/testgen/build
+
 app:
   id: ari:cloud:ecosystem::app/5218dcc8-b35d-40ab-8224-655c4de8b904
