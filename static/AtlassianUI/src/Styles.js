@@ -33,10 +33,10 @@ export const LoadingContainer = styled.div`
   align-items: center;
   height: 100%;
 `;
-
+// padding: 8px;
 export const Row = styled.div`
   transition: .3s ease all;
-  padding: 8px;
+
   border-bottom: 1px solid ${colors.N30};
 
   button {
