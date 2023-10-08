@@ -12,12 +12,24 @@ permissions:
       - "unsafe-inline"
 modules:
   jira:issuePanel:
-    - key: testcase-validator-glance
-      resource: testgenUI
+    - key: testcase-validator-issuePanel
+      resource: AtlassianUI
       title: testcase validator
+      resolver:
+        function: resolver
       description: testcase validator
       label: testcase validator
       icon: https://developer.atlassian.com/platform/forge/images/icons/issue-panel-icon.svg
+      displayConditions:
+        issueType: Story
+  jira:issueContext:
+    - key: testcase-validator-issueContext
+      function: checklist
+      title: testcase validator
+      label: testcase validator
+      icon: https://developer.atlassian.com/platform/forge/images/icons/issue-panel-icon.svg
+      displayConditions:
+        issueType: Story
   trigger:
     - key: testgenai-casegen
       function: testgen
@@ -28,9 +40,13 @@ modules:
       handler: testgen.run
     - key: checklist
       handler: checklist.run
+    - key: resolver
+      handler: resolver.handler
 resources:
   - key: testgenUI
     path: static/testgen/build
+  - key: AtlassianUI
+    path: static/AtlassianUI/build
 
 app:
   id: ari:cloud:ecosystem::app/5218dcc8-b35d-40ab-8224-655c4de8b904

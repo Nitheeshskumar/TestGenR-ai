@@ -19,8 +19,11 @@ import ForgeUI, {
   Row,
   Cell,
   Tooltip,
+  IssueContext,
+  Toggle,
 } from "@forge/ui";
 import { properties } from "@forge/api";
+import CheckCircleIcon from '@atlaskit/icon/glyph/check-circle'
 
 const getValues = async (issueKey) => await properties.onJiraIssue(issueKey).get("qa_demo_validator");
 
@@ -35,20 +38,21 @@ const App = () => {
   const sample = [
     {
       id: "01",
-      test_case: "Verify that the button is placed at the lower end of the screen.",
-      status: "Completed",
+      testcase: "Verify that the button is placed at the lower end of the screen.",
+      checked: true,
     },
     {
       id: "02",
-      test_case: "Verify that the button text is 'Click me'.",
-      status: "Not completed",
+      testcase: "Verify that the button text is 'Click me'.",
+      checked: false,
     },
   ];
-  let qaDemoParts = values || sample.map((el) => ({ ...el, checked: true, remarks: "" }));
+  let qaDemoParts = values || sample
 
   const saveValues = async (formData, issueKey) => {
     let dataToSave = [];
-    console.log("formData", formData);
+    console.log("formData", formData,issueKey
+    );
     // await properties.onJiraIssue(issueKey).set('qa_demo_validator', dataToSave);
     // await setValues(dataToSave);
     return formData;
@@ -59,7 +63,7 @@ const App = () => {
     setEachTCEntry(entry);
   };
 
-  const onSubmit = async (formData) => {
+  const onSubmit = async (formData,id) => {
     /**
      * formData:
      * {
@@ -68,12 +72,25 @@ const App = () => {
      * }
      */
     // setFormState(formData);
-    console.log(
-      qaDemoParts.find((el) => {
-        el.test_case === formData.testcase;
-      })
-    );
+    console.log('formData',formData,id);
+      const editedEntry=qaDemoParts.find(el=>el.id===id);
+      editedEntry.testcase=formData.testcase;
+      editedEntry.checked=formData.checked;
+      setValues(qaDemoParts)
+
+      await properties.onJiraIssue(issueKey).set('qa_demo_validator', qaDemoParts);
+      setOpen(false)
+    // console.log(
+    //   qaDemoParts.find((el) => {
+    //     el.test_case === formData.testcase;
+    //   })
+    // );
+    return true
   };
+  const handleDelete=()=>{
+    console.log('eachTCEntry',eachTCEntry);
+    setOpen(false)
+  }
 
   //   const goBack = () => {};
   //   const cancel = () => {};
@@ -87,10 +104,10 @@ const App = () => {
       <Table>
         <Head>
           <Cell>
-            <Text content="Serial No." />
+            <Text content="Case" />
           </Cell>
           <Cell>
-            <Text content="Test case" />
+            <Text content="Description" />
           </Cell>
           <Cell>
             <Text content="Status" />
@@ -106,9 +123,10 @@ const App = () => {
               <Text content={entry.id} />
             </Cell>
             <Cell>
-              <Text content={entry.test_case}></Text>
+              <Text content={entry.testcase}></Text>
             </Cell>
-            <Cell>{entry.checked ? <Text content={entry.status} /> : null}</Cell>
+            <Cell> {entry.completed ? (<Text content={"✅"} />) : null}
+            </Cell>
             <Cell>
               <Tooltip text="Click for more actions">
                 <Button text="View more" onClick={() => openModal(entry)}></Button>
@@ -119,12 +137,10 @@ const App = () => {
       </Table>
       {isOpen && (
         <ModalDialog header="Edit test case" onClose={() => setOpen(false)}>
-          <Form onSubmit={onSubmit}>
-            <TextArea name="testcase" label="Test case description" defaultValue={eachTCEntry?.test_case} />
-            <CheckboxGroup name="actions" label="Actions">
-              <Checkbox value="complete" label="Mark as complete" />
-              <Checkbox value="delete" label="Delete test case" />
-            </CheckboxGroup>
+          <Form onSubmit={(data)=>onSubmit(data,eachTCEntry.id)}>
+            <TextArea name="testcase" label="Test case description" defaultValue={eachTCEntry?.testcase} isRequired/>
+            <Toggle label="Passed" name="checked" defaultChecked={eachTCEntry.checked}/>
+            <Button text='Delete' appearance="danger" icon={'trash'} onClick={handleDelete}/>
           </Form>
         </ModalDialog>
       )}
@@ -133,7 +149,7 @@ const App = () => {
 };
 
 export const run = render(
-  <IssueGlance>
+  <IssueContext>
     <App />
-  </IssueGlance>
+  </IssueContext>
 );

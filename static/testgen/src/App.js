@@ -13,6 +13,7 @@ import {
   Box,
 } from "@mui/material";
 import "./App.css";
+import CustomizedDialogs from "./components/Modal";
 
 function App() {
   const [isOpen, setOpen] = useState(false);
@@ -23,6 +24,16 @@ function App() {
       id: "01",
       test_case: "Verifyy that the button is placed at the lower end of the screen.",
       status: "Completed",
+    },
+    {
+      id: "02",
+      test_case: "Verify that the button text is 'Click me'.",
+      status: "Not completed",
+    },
+    {
+      id: "02",
+      test_case: "Verify that the button text is 'Click me'.",
+      status: "Not completed",
     },
     {
       id: "02",
@@ -80,7 +91,7 @@ function App() {
   //   modal.style.top = topOffset + "px";
   // };
   return (
-    <>
+    <><CustomizedDialogs/>
       <TableContainer component={Paper}>
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
           <TableHead>
@@ -117,7 +128,7 @@ function App() {
           aria-describedby="modal-modal-description"
           sx={modal}
         >
-          <Box sx={style}>
+          <Box>
             <Typography id="modal-modal-title" variant="h6" component="h2">
               Text in a modal
             </Typography>
