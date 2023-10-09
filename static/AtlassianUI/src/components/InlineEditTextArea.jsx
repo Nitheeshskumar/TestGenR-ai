@@ -15,6 +15,9 @@ const containerStyles = xcss({
   //   paddingRight: 'space.100',
   //   paddingBottom: 'space.600',
   width: "100%",
+  display: "flex",
+  justifyContent: "space-between",
+  alignItems: "end",
 });
 
 const fontSize = getFontSize();
@@ -28,7 +31,11 @@ const readViewContainerStyles = xcss({
   lineHeight: `${(gridSize * textAreaLineHeightFactor) / fontSize}`,
   wordBreak: "break-word",
 });
-
+const innerBox = xcss({
+  display: "flex",
+  alignItems: "end",
+  marginTop: "-12px",
+});
 const InlineEditCustomTextarea = ({ id, label, isChecked, children }) => {
   console.log("isChecked", isChecked);
   const [editValue, setEditValue] = useState(label);
@@ -44,34 +51,40 @@ const InlineEditCustomTextarea = ({ id, label, isChecked, children }) => {
   // };
 
   const toggleChecked = useCallback((event) => {
+    console.log(event.target);
     setIsCheckbox((current) => !current);
   }, []);
 
   return (
     <Box xcss={containerStyles}>
-      <InlineEdit
-        defaultValue={editValue}
-        editView={({ errorMessage, ...fieldProps }, ref) => (
-          // @ts-ignore - textarea does not pass through ref as a prop
-          <TextArea {...fieldProps} ref={ref} />
-        )}
-        readView={() => (
-          <Box xcss={readViewContainerStyles}>
-            <Checkbox isChecked={isCheckbox} onChange={toggleChecked} label={checkBoxlabel()} />
-            {children}
-          </Box>
-        )}
-        // onConfirm={setEditValue}
-        keepEditViewOpenOnBlur
-        readViewFitContainerWidth
-        isEditing={isEditing}
-        onCancel={() => setEditing(false)}
-        onConfirm={(value) => {
-          setEditValue(value);
-          setEditing(false);
-        }}
-        // onEdit={() => setEditing(true)}
-      />
+      <Box xcss={innerBox}>
+        <Checkbox
+          isChecked={isCheckbox}
+          onChange={toggleChecked}
+          // label={checkBoxlabel()}
+        />
+        <InlineEdit
+          defaultValue={editValue}
+          editView={({ errorMessage, ...fieldProps }, ref) => (
+            // @ts-ignore - textarea does not pass through ref as a prop
+            <TextArea {...fieldProps} ref={ref} />
+          )}
+          readView={() => (
+            <Box xcss={readViewContainerStyles}>{checkBoxlabel()}</Box>
+          )}
+          // onConfirm={setEditValue}
+          keepEditViewOpenOnBlur
+          readViewFitContainerWidth
+          isEditing={isEditing}
+          onCancel={() => setEditing(false)}
+          onConfirm={(value) => {
+            setEditValue(value);
+            setEditing(false);
+          }}
+          // onEdit={() => setEditing(true)}
+        />
+      </Box>
+      {children}
     </Box>
   );
 };

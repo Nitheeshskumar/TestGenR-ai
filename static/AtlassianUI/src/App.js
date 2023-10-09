@@ -173,11 +173,21 @@ function App() {
           return (
             <Row isChecked={isChecked} key={label} firstRow={i === 0}>
               {/* <Checkbox isChecked={isChecked} onChange={() => toggleChecked(id)} label={<InlineEdit onSave={editTest} id={id} label={label}/>}/> */}
-              <InlineEditCustomTextarea id={id} label={label} isChecked={isChecked}>
+              <InlineEditCustomTextarea
+                id={id}
+                label={label}
+                isChecked={isChecked}
+              >
                 <Status>
                   {isSpinnerShowing ? <Spinner size="medium" /> : null}
-                  {isChecked ? <Lozenge appearance="success">Done</Lozenge> : null}
-                  <Button size="small" spacing="none" onClick={() => deleteTest(id)}>
+                  {isChecked ? (
+                    <Lozenge appearance="success">Done</Lozenge>
+                  ) : null}
+                  <Button
+                    size="small"
+                    spacing="none"
+                    onClick={() => deleteTest(id)}
+                  >
                     <IconContainer>
                       <Icon>
                         <EditorCloseIcon />

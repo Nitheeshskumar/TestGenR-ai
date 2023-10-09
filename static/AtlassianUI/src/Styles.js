@@ -1,8 +1,8 @@
-import styled from 'styled-components';
-import { colors, elevation, } from '@atlaskit/theme';
+import styled from "styled-components";
+import { colors, elevation } from "@atlaskit/theme";
 
 export const Card = styled.div`
-  ${elevation['e100']};
+  ${elevation["e100"]};
   background: ${colors.N0};
   position: relative;
   text-decoration: none;
@@ -11,12 +11,11 @@ export const Card = styled.div`
 
   box-sizing: border-box;
 `;
-
+// margin-top: -24px;
 export const Status = styled.span`
   float: right;
   align-items: center;
   display: inline-flex;
-  margin-top: -24px;
 
   & > span {
     margin-left: 8px;
@@ -35,13 +34,13 @@ export const LoadingContainer = styled.div`
 `;
 // padding: 8px;
 export const Row = styled.div`
-  transition: .3s ease all;
+  transition: 0.3s ease all;
 
   border-bottom: 1px solid ${colors.N30};
 
   button {
     opacity: 0;
-    transition: .2s ease all;
+    transition: 0.2s ease all;
     margin-left: 8px;
   }
 
@@ -51,11 +50,11 @@ export const Row = styled.div`
     }
   }
 
-  ${props => `
+  ${(props) => `
 
-    ${props.isCompact ? 'padding: 0 6px;' : ''}
-    ${props.isCompact ? 'border: 0;' : ''}
-    ${props.firstRow ? 'margin-top: 40px;' : ''}
+    ${props.isCompact ? "padding: 0 6px;" : ""}
+    ${props.isCompact ? "border: 0;" : ""}
+    ${props.firstRow ? "margin-top: 40px;" : ""}
   `}
 `;
 // ${props.isChecked ? 'text-decoration: line-through;' : ''}
