@@ -1,23 +1,32 @@
-import React, { useEffect, useState, Fragment } from 'react';
-import { invoke } from '@forge/bridge';
+import React, { useEffect, useState, Fragment } from "react";
+import { invoke } from "@forge/bridge";
 
 // Atlaskit
-import LoadingButton from '@atlaskit/button/loading-button';   
-import { Checkbox } from '@atlaskit/checkbox';
-import EditorCloseIcon from '@atlaskit/icon/glyph/editor/close';
-import TrashIcon from '@atlaskit/icon/glyph/trash';
-import Textfield from '@atlaskit/textfield';
-import Lozenge from '@atlaskit/lozenge';
-import Spinner from '@atlaskit/spinner';
-import Button from '@atlaskit/button';
+import LoadingButton from "@atlaskit/button/loading-button";
+import { Checkbox } from "@atlaskit/checkbox";
+import EditorCloseIcon from "@atlaskit/icon/glyph/editor/close";
+import TrashIcon from "@atlaskit/icon/glyph/trash";
+import Textfield from "@atlaskit/textfield";
+import Lozenge from "@atlaskit/lozenge";
+import Spinner from "@atlaskit/spinner";
+import Button from "@atlaskit/button";
 
 // Custom Styles
 import {
-  Card, Row, Icon, IconContainer, Status, SummaryActions, SummaryCount, SummaryFooter,
-  ScrollContainer, Form, LoadingContainer
-} from './Styles';
-import InlineEdit from './components/InlineEdit';
-import InlineEditCustomTextarea from './components/InlineEditTextArea';
+  Card,
+  Row,
+  Icon,
+  IconContainer,
+  Status,
+  SummaryActions,
+  SummaryCount,
+  SummaryFooter,
+  ScrollContainer,
+  Form,
+  LoadingContainer,
+} from "./Styles";
+import InlineEdit from "./components/InlineEdit";
+import InlineEditCustomTextarea from "./components/InlineEditTextArea";
 const sample = [
   {
     id: "01",
@@ -42,76 +51,75 @@ const sample = [
 ];
 function App() {
   const [tests, setTests] = useState(undefined);
-  const [input, setInput] = useState('');
+  const [input, setInput] = useState("");
   const [isFetched, setIsFetched] = useState(false);
   const [isDeleteAllShowing, setDeleteAllShowing] = useState(false);
   const [isDeletingAll, setDeletingAll] = useState(false);
-  console.log('tests',tests)
-  useEffect(()=>{
+  console.log("tests", tests);
+  useEffect(() => {
     if (!isFetched) {
-      console.log('isfetched')
+      console.log("isfetched");
       setIsFetched(true);
-      invoke('get-all').then((values)=>{
-        console.log(values)
-        setTests(values)
+      invoke("get-all").then((values) => {
+        console.log(values);
+        setTests(values);
       });
     }
-  },[isFetched])
- 
+  }, [isFetched]);
 
   const createTest = async (label) => {
     const newTestList = [...tests, { label, isChecked: false, isSaving: true }];
 
     setTests(newTestList);
-  }
+  };
 
   const toggleChecked = (id) => {
     setTests(
-      tests.map(test => {
+      tests.map((test) => {
         if (test.id === id) {
           return { ...test, isChecked: !test.isChecked, isSaving: true };
         }
         return test;
       })
-    )
-  }
+    );
+  };
 
-  const editTest = (id,text) => {
+  const editTest = (id, text) => {
     setTests(
-      tests.map(test => {
+      tests.map((test) => {
         if (test.id === id) {
           return { ...test, label: text, isSaving: true };
         }
         return test;
       })
-    )
-  }
+    );
+  };
 
   const deleteTest = (id) => {
     setTests(
-      tests.map(test => {
+      tests.map((test) => {
         if (test.id === id) {
           return { ...test, isDeleting: true };
         }
         return test;
       })
-    )
-  }
+    );
+  };
 
   const deleteAllTests = async () => {
     setDeletingAll(true);
 
-    await invoke('delete-all');
+    await invoke("delete-all");
 
     setTests([]);
     setDeleteAllShowing(false);
     setDeletingAll(false);
-  }
+  };
 
   const onSubmit = (e) => {
     e.preventDefault();
     createTest(input);
-    setInput('');
+    setInput("");
   };
 
   // useEffect(() => {
@@ -147,40 +155,41 @@ function App() {
     );
   }
 
-  const completedCount = tests.filter(test => test.isChecked).length;
+  const completedCount = tests.filter((test) => test.isChecked).length;
   const totalCount = tests.length;
   return (
     <Card>
-        <SummaryFooter>
+      <SummaryFooter>
         <SummaryCount>
-        <Lozenge>{completedCount}/{totalCount} Completed</Lozenge>
+          <Lozenge>
+            {completedCount}/{totalCount} Completed
+          </Lozenge>
         </SummaryCount>
-
       </SummaryFooter>
       <ScrollContainer>
-      {tests.map(({ id, label, isChecked, isSaving, isDeleting }, i) => {
-        const isSpinnerShowing = isSaving || isDeleting;
+        {tests.map(({ id, label, isChecked, isSaving, isDeleting }, i) => {
+          const isSpinnerShowing = isSaving || isDeleting;
 
-        return (
-          <Row isChecked={isChecked} key={label} firstRow={i===0}>
-            {/* <Checkbox isChecked={isChecked} onChange={() => toggleChecked(id)} label={<InlineEdit onSave={editTest} id={id} label={label}/>}/> */}
-            <InlineEditCustomTextarea id={id} label={label} isChecked={isChecked}>
-            <Status>
-              {isSpinnerShowing ? <Spinner size="medium" /> : null}
-              {isChecked ? <Lozenge appearance="success">Done</Lozenge> : null}
-              <Button size="small" spacing="none" onClick={() => deleteTest(id)}>
-                <IconContainer>
-                  <Icon>
-                    <EditorCloseIcon />
-                  </Icon>
-                </IconContainer>
-              </Button>
-            </Status>
-            </InlineEditCustomTextarea>
-          </Row>
-        );
-      })}
-        <Row >
+          return (
+            <Row isChecked={isChecked} key={label} firstRow={i === 0}>
+              {/* <Checkbox isChecked={isChecked} onChange={() => toggleChecked(id)} label={<InlineEdit onSave={editTest} id={id} label={label}/>}/> */}
+              <InlineEditCustomTextarea id={id} label={label} isChecked={isChecked}>
+                <Status>
+                  {isSpinnerShowing ? <Spinner size="medium" /> : null}
+                  {isChecked ? <Lozenge appearance="success">Done</Lozenge> : null}
+                  <Button size="small" spacing="none" onClick={() => deleteTest(id)}>
+                    <IconContainer>
+                      <Icon>
+                        <EditorCloseIcon />
+                      </Icon>
+                    </IconContainer>
+                  </Button>
+                </Status>
+              </InlineEditCustomTextarea>
+            </Row>
+          );
+        })}
+        <Row>
           <Form onSubmit={onSubmit}>
             <Textfield
               appearance="subtle"
@@ -191,7 +200,6 @@ function App() {
           </Form>
         </Row>
       </ScrollContainer>
-    
     </Card>
   );
 }

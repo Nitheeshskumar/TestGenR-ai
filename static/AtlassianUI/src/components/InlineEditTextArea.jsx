@@ -1,47 +1,52 @@
+import { useState, useCallback } from "react";
 
-import { useState } from 'react';
+import { jsx } from "@emotion/react";
 
-import { jsx } from '@emotion/react';
+import { Box, xcss } from "@atlaskit/primitives";
+import TextArea from "@atlaskit/textarea";
+import { token } from "@atlaskit/tokens";
+import { Checkbox } from "@atlaskit/checkbox";
+import { fontSize as getFontSize } from "@atlaskit/theme/constants";
 
-import { Box, xcss } from '@atlaskit/primitives';
-import TextArea from '@atlaskit/textarea';
-import { token } from '@atlaskit/tokens';
-import { Checkbox } from '@atlaskit/checkbox';
-import {
-  fontSize as getFontSize
-} from '@atlaskit/theme/constants';
-
-import InlineEdit from '@atlaskit/inline-edit';
+import InlineEdit from "@atlaskit/inline-edit";
 
 const containerStyles = xcss({
-//   paddingTop: 'space.100',
-//   paddingRight: 'space.100',
-//   paddingBottom: 'space.600',
-  width: '100%',
+  //   paddingTop: 'space.100',
+  //   paddingRight: 'space.100',
+  //   paddingBottom: 'space.600',
+  width: "100%",
 });
 
 const fontSize = getFontSize();
-const gridSize = token('space.100', '8px');
+const gridSize = token("space.100", "8px");
 const minRows = 2;
 const textAreaLineHeightFactor = 2.5;
 
 const readViewContainerStyles = xcss({
   minHeight: `${gridSize * textAreaLineHeightFactor * minRows}px`,
-  padding: 'space.075',
+  padding: "space.075",
   lineHeight: `${(gridSize * textAreaLineHeightFactor) / fontSize}`,
-  wordBreak: 'break-word',
+  wordBreak: "break-word",
 });
 
-const InlineEditCustomTextarea = ({id,label,isChecked,children}) => {
-
+const InlineEditCustomTextarea = ({ id, label, isChecked, children }) => {
+  console.log("isChecked", isChecked);
   const [editValue, setEditValue] = useState(label);
-const checkBoxlabel=()=>{
-    <>
-    {label} {children}</>
-}
-const toggleChecked=event=>{
-    console.log('checked',event)
-}
+  const [isEditing, setEditing] = useState(false);
+  const [isCheckbox, setIsCheckbox] = useState(isChecked);
+  const checkBoxlabel = () => {
+    return <span onClick={() => setEditing(true)}>{label}</span>;
+  };
+  // const toggleChecked = (event) => {
+  //   const selected = event.target.checked;
+  //   setIsCheckbox(selected);
+  //   console.log("checked", selected);
+  // };
+
+  const toggleChecked = useCallback((event) => {
+    setIsCheckbox((current) => !current);
+  }, []);
+
   return (
     <Box xcss={containerStyles}>
       <InlineEdit
@@ -52,13 +57,20 @@ const toggleChecked=event=>{
         )}
         readView={() => (
           <Box xcss={readViewContainerStyles}>
-           <Checkbox isChecked={isChecked} onChange={toggleChecked} label={label} />
-          {children}
+            <Checkbox isChecked={isCheckbox} onChange={toggleChecked} label={checkBoxlabel()} />
+            {children}
           </Box>
         )}
-        onConfirm={setEditValue}
+        // onConfirm={setEditValue}
         keepEditViewOpenOnBlur
         readViewFitContainerWidth
+        isEditing={isEditing}
+        onCancel={() => setEditing(false)}
+        onConfirm={(value) => {
+          setEditValue(value);
+          setEditing(false);
+        }}
+        // onEdit={() => setEditing(true)}
       />
     </Box>
   );
