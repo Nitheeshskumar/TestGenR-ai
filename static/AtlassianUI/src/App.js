@@ -122,27 +122,58 @@ function App() {
     setInput("");
   };
 
+  useEffect(() => {
+    console.log("useeffect");
+    if (!tests) return;
+    if (!tests.find((test) => test.isSaving || test.isDeleting)) return;
+
+    Promise.all(
+      tests.map((test) => {
+        if (test.isSaving && !test.id) {
+          return invoke("create", { label: test.label, isChecked: false });
+        }
+        if (test.isSaving && test.id) {
+          return invoke("update", {
+            id: test.id,
+            label: test.label,
+            isChecked: test.isChecked,
+          });
+        }
+        if (test.isDeleting && test.id) {
+          return invoke("delete", { id: test.id }).then(() => false);
+        }
+        return test;
+      })
+    )
+      .then((saved) => saved.filter((a) => a))
+      .then(setTests);
+  }, [tests]);
+
   // useEffect(() => {
-  //   console.log('useeffect')
+  //   console.log("useeffect");
   //   if (!tests) return;
-  //   if (!tests.find(test => test.isSaving || test.isDeleting)) return;
+  //   if (!tests.find((test) => test.isSaving || test.isDeleting)) return;
 
   //   Promise.all(
   //     tests.map((test) => {
   //       if (test.isSaving && !test.id) {
-  //         return invoke('create', { label: test.label, isChecked: false })
+  //         return {
+  //           label: test.label,
+  //           isChecked: false,
+  //           id: Math.floor(Math.random() * 1000),
+  //         };
   //       }
   //       if (test.isSaving && test.id) {
-  //         return invoke('update', { id: test.id, label: test.label, isChecked: test.isChecked })
+  //         return { id: test.id, label: test.label, isChecked: test.isChecked };
   //       }
   //       if (test.isDeleting && test.id) {
-  //         return invoke('delete', { id: test.id }).then(() => false);
+  //         return false;
   //       }
   //       return test;
   //     })
   //   )
-  //   .then(saved => saved.filter(a => a))
-  //   .then(setTests)
+  //     .then((saved) => saved.filter((a) => a))
+  //     .then(setTests);
   // }, [tests]);
 
   if (!tests) {
@@ -177,6 +208,8 @@ function App() {
                 id={id}
                 label={label}
                 isChecked={isChecked}
+                toggleChecked={toggleChecked}
+                editTest={editTest}
               >
                 <Status>
                   {isSpinnerShowing ? <Spinner size="medium" /> : null}

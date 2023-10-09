@@ -36,13 +36,24 @@ const innerBox = xcss({
   alignItems: "end",
   marginTop: "-12px",
 });
-const InlineEditCustomTextarea = ({ id, label, isChecked, children }) => {
+const InlineEditCustomTextarea = ({
+  id,
+  label,
+  isChecked,
+  children,
+  toggleChecked,
+  editTest,
+}) => {
   console.log("isChecked", isChecked);
-  const [editValue, setEditValue] = useState(label);
+  // const [editValue, setEditValue] = useState(label);
   const [isEditing, setEditing] = useState(false);
-  const [isCheckbox, setIsCheckbox] = useState(isChecked);
+  // const [isCheckbox, setIsCheckbox] = useState(isChecked);
   const checkBoxlabel = () => {
     return <span onClick={() => setEditing(true)}>{label}</span>;
+  };
+  const handleTextChange = (value) => {
+    editTest(id, value);
+    setEditing(false);
   };
   // const toggleChecked = (event) => {
   //   const selected = event.target.checked;
@@ -50,21 +61,21 @@ const InlineEditCustomTextarea = ({ id, label, isChecked, children }) => {
   //   console.log("checked", selected);
   // };
 
-  const toggleChecked = useCallback((event) => {
-    console.log(event.target);
-    setIsCheckbox((current) => !current);
-  }, []);
+  // const toggleChecked = useCallback((event) => {
+  //   console.log(event.target);
+  //   setIsCheckbox((current) => !current);
+  // }, []);
 
   return (
     <Box xcss={containerStyles}>
       <Box xcss={innerBox}>
         <Checkbox
-          isChecked={isCheckbox}
-          onChange={toggleChecked}
+          isChecked={isChecked}
+          onChange={() => toggleChecked(id)}
           // label={checkBoxlabel()}
         />
         <InlineEdit
-          defaultValue={editValue}
+          defaultValue={label}
           editView={({ errorMessage, ...fieldProps }, ref) => (
             // @ts-ignore - textarea does not pass through ref as a prop
             <TextArea {...fieldProps} ref={ref} />
@@ -77,10 +88,7 @@ const InlineEditCustomTextarea = ({ id, label, isChecked, children }) => {
           readViewFitContainerWidth
           isEditing={isEditing}
           onCancel={() => setEditing(false)}
-          onConfirm={(value) => {
-            setEditValue(value);
-            setEditing(false);
-          }}
+          onConfirm={handleTextChange}
           // onEdit={() => setEditing(true)}
         />
       </Box>
