@@ -23,7 +23,7 @@ import ForgeUI, {
   Toggle,
 } from "@forge/ui";
 import { properties } from "@forge/api";
-import CheckCircleIcon from '@atlaskit/icon/glyph/check-circle'
+import CheckCircleIcon from "@atlaskit/icon/glyph/check-circle";
 
 const getValues = async (issueKey) => await properties.onJiraIssue(issueKey).get("qa_demo_validator");
 
@@ -47,12 +47,10 @@ const App = () => {
       checked: false,
     },
   ];
-  let qaDemoParts = values || sample
+  let qaDemoParts = values || sample;
 
   const saveValues = async (formData, issueKey) => {
     let dataToSave = [];
-    console.log("formData", formData,issueKey
-    );
     // await properties.onJiraIssue(issueKey).set('qa_demo_validator', dataToSave);
     // await setValues(dataToSave);
     return formData;
@@ -63,41 +61,19 @@ const App = () => {
     setEachTCEntry(entry);
   };
 
-  const onSubmit = async (formData,id) => {
-    /**
-     * formData:
-     * {
-     *    username: 'Username',
-     *    products: ['jira']
-     * }
-     */
-    // setFormState(formData);
-    console.log('formData',formData,id);
-      const editedEntry=qaDemoParts.find(el=>el.id===id);
-      editedEntry.testcase=formData.testcase;
-      editedEntry.checked=formData.checked;
-      setValues(qaDemoParts)
+  const onSubmit = async (formData, id) => {
+    const editedEntry = qaDemoParts.find((el) => el.id === id);
+    editedEntry.testcase = formData.testcase;
+    editedEntry.checked = formData.checked;
+    setValues(qaDemoParts);
 
-      await properties.onJiraIssue(issueKey).set('qa_demo_validator', qaDemoParts);
-      setOpen(false)
-    // console.log(
-    //   qaDemoParts.find((el) => {
-    //     el.test_case === formData.testcase;
-    //   })
-    // );
-    return true
+    await properties.onJiraIssue(issueKey).set("qa_demo_validator", qaDemoParts);
+    setOpen(false);
+    return true;
   };
-  const handleDelete=()=>{
-    console.log('eachTCEntry',eachTCEntry);
-    setOpen(false)
-  }
-
-  //   const goBack = () => {};
-  //   const cancel = () => {};
-
-  // The array of additional buttons.
-  // These buttons align to the right of the submit button.
-  //   const actionButtons = [<Button text="Go back" onClick={goBack} />, <Button text="Cancel" onClick={cancel} />];
+  const handleDelete = () => {
+    setOpen(false);
+  };
 
   return (
     <Fragment>
@@ -125,8 +101,7 @@ const App = () => {
             <Cell>
               <Text content={entry.testcase}></Text>
             </Cell>
-            <Cell> {entry.completed ? (<Text content={"✅"} />) : null}
-            </Cell>
+            <Cell> {entry.completed ? <Text content={"✅"} /> : null}</Cell>
             <Cell>
               <Tooltip text="Click for more actions">
                 <Button text="View more" onClick={() => openModal(entry)}></Button>
@@ -137,10 +112,10 @@ const App = () => {
       </Table>
       {isOpen && (
         <ModalDialog header="Edit test case" onClose={() => setOpen(false)}>
-          <Form onSubmit={(data)=>onSubmit(data,eachTCEntry.id)}>
-            <TextArea name="testcase" label="Test case description" defaultValue={eachTCEntry?.testcase} isRequired/>
-            <Toggle label="Passed" name="checked" defaultChecked={eachTCEntry.checked}/>
-            <Button text='Delete' appearance="danger" icon={'trash'} onClick={handleDelete}/>
+          <Form onSubmit={(data) => onSubmit(data, eachTCEntry.id)}>
+            <TextArea name="testcase" label="Test case description" defaultValue={eachTCEntry?.testcase} isRequired />
+            <Toggle label="Passed" name="checked" defaultChecked={eachTCEntry.checked} />
+            <Button text="Delete" appearance="danger" icon={"trash"} onClick={handleDelete} />
           </Form>
         </ModalDialog>
       )}
