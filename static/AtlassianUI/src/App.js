@@ -25,30 +25,8 @@ import {
   Form,
   LoadingContainer,
 } from "./Styles";
-import InlineEdit from "./components/InlineEdit";
 import InlineEditCustomTextarea from "./components/InlineEditTextArea";
-const sample = [
-  {
-    id: "01",
-    label: "Verifyy that the button is placed at the lower end of the screen.",
-    isChecked: true,
-  },
-  {
-    id: "02",
-    label: "Verify that the button text is 'Click me'.",
-    isChecked: false,
-  },
-  {
-    id: "03",
-    label: "Verify that the button text is 'Click me'.",
-    isChecked: false,
-  },
-  {
-    id: "04",
-    label: "Verify that the button text is 'Click me'.",
-    isChecked: false,
-  },
-];
+
 function App() {
   const [tests, setTests] = useState(undefined);
   const [input, setInput] = useState("");

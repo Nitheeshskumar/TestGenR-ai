@@ -72,17 +72,24 @@ const callOpenAI = async (prompt) => {
       const firstChoice = chatCompletion.choices[0];
 
       if (firstChoice) {
-        result = firstChoice.message.function_call.arguments;
+        result = JSON.parse(firstChoice.message.function_call.arguments);
       } else {
-        console.warn(`Chat completion response did not include any assistance choices.`);
-        result = `AI response did not include any choices.`;
+        console.warn(
+          `Chat completion response did not include any assistance choices.`
+        );
+        // result = `AI response did not include any choices.`;
+        result = { result: [] };
       }
     } else {
-      const text = await response.text();
-      result = text;
+      // const text = await response.text();
+      // result = text;
+      console.log("status not 200");
+      result = { result: [] };
     }
-    return result;
+    console.log("result", result);
+    return result.result.map((el) => ({ ...el, id: getUniqueId() }));
   } catch (e) {
+    console.log("error in callopenai", e);
     return false;
   }
 };
@@ -97,4 +104,6 @@ export const getOpenAPIModel = () => {
   return "gpt-3.5-turbo";
   // return 'gpt-4';
 };
+
+export const getUniqueId = () => "_" + Math.random().toString(16).slice(2, 15);
 export default callOpenAI;
