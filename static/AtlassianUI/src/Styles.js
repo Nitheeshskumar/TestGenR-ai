@@ -93,6 +93,9 @@ export const SummaryFooter = styled.div`
 
 export const SummaryCount = styled.div`
   padding: 0 12px;
+  display: flex;
+  align-items: center;
+  gap: 520px;
 `;
 
 export const SummaryActions = styled.div`

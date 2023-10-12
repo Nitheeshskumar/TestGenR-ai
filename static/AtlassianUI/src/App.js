@@ -1,11 +1,8 @@
-import React, { useEffect, useState, Fragment } from "react";
+import React, { useEffect, useState } from "react";
 import { invoke } from "@forge/bridge";
 
 // Atlaskit
-import LoadingButton from "@atlaskit/button/loading-button";
-import { Checkbox } from "@atlaskit/checkbox";
 import EditorCloseIcon from "@atlaskit/icon/glyph/editor/close";
-import TrashIcon from "@atlaskit/icon/glyph/trash";
 import Textfield from "@atlaskit/textfield";
 import Lozenge from "@atlaskit/lozenge";
 import Spinner from "@atlaskit/spinner";
@@ -18,7 +15,6 @@ import {
   Icon,
   IconContainer,
   Status,
-  SummaryActions,
   SummaryCount,
   SummaryFooter,
   ScrollContainer,
@@ -27,13 +23,12 @@ import {
 } from "./Styles";
 import InlineEditCustomTextarea from "./components/InlineEditTextArea";
 import Flag from "./components/Flag";
+import ExportExcel from "./components/ExportExcel";
 
 function App() {
   const [tests, setTests] = useState(undefined);
   const [input, setInput] = useState("");
   const [isFetched, setIsFetched] = useState(false);
-  const [isDeleteAllShowing, setDeleteAllShowing] = useState(false);
-  const [isDeletingAll, setDeletingAll] = useState(false);
   console.log("tests", tests);
   useEffect(() => {
     if (!isFetched) {
@@ -84,16 +79,6 @@ function App() {
     );
   };
 
-  const deleteAllTests = async () => {
-    setDeletingAll(true);
-
-    await invoke("delete-all");
-
-    setTests([]);
-    setDeleteAllShowing(false);
-    setDeletingAll(false);
-  };
-
   const onSubmit = (e) => {
     e.preventDefault();
     createTest(input);
@@ -136,7 +121,7 @@ function App() {
     );
   }
 
-  if (tests.length == 0) {
+  if (tests.length === 0) {
     return (
       <Card>
         <LoadingContainer>
@@ -155,6 +140,15 @@ function App() {
           <Lozenge>
             {completedCount}/{totalCount} Completed
           </Lozenge>
+          <ExportExcel
+            testCases={tests.map((test, i) => {
+              return {
+                id: i,
+                testcase: test.label,
+                status: test.isChecked ? "Verified" : "Not verified",
+              };
+            })}
+          />
         </SummaryCount>
       </SummaryFooter>
       <ScrollContainer>
@@ -173,14 +167,8 @@ function App() {
               >
                 <Status>
                   {isSpinnerShowing ? <Spinner size="medium" /> : null}
-                  {isChecked ? (
-                    <Lozenge appearance="success">Done</Lozenge>
-                  ) : null}
-                  <Button
-                    size="small"
-                    spacing="none"
-                    onClick={() => deleteTest(id)}
-                  >
+                  {isChecked ? <Lozenge appearance="success">Done</Lozenge> : null}
+                  <Button size="small" spacing="none" onClick={() => deleteTest(id)}>
                     <IconContainer>
                       <Icon>
                         <EditorCloseIcon />

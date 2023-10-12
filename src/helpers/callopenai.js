@@ -5,13 +5,6 @@ const callOpenAI = async (prompt) => {
     { role: "user", content: prompt },
   ];
 
-  // const messages = [
-  //   {
-  //     role: "user",
-  //     content: prompt,
-  //   },
-  // ];
-
   const schema = {
     type: "object",
     properties: {
@@ -74,9 +67,7 @@ const callOpenAI = async (prompt) => {
       if (firstChoice) {
         result = JSON.parse(firstChoice.message.function_call.arguments);
       } else {
-        console.warn(
-          `Chat completion response did not include any assistance choices.`
-        );
+        console.warn(`Chat completion response did not include any assistance choices.`);
         // result = `AI response did not include any choices.`;
         result = { result: [] };
       }

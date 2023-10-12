@@ -1,23 +1,16 @@
-import "./styles.css";
 import { CSVLink } from "react-csv";
 import ExportIcon from "@atlaskit/icon/glyph/export";
 import Tooltip from "@atlaskit/tooltip";
 
-export default function ExportExcel() {
+export default function ExportExcel({ testCases }) {
   const headers = [
-    { label: "#", key: "no" },
+    { label: "#", key: "id" },
     { label: "Testcase", key: "testcase" },
-    { label: "status", key: "status" },
-  ];
-
-  const data = [
-    { firstname: "Ahmed", lastname: "Tomi", email: "ah@smthing.co.com" },
-    { firstname: "Raed", lastname: "Labes", email: "rl@smthing.co.com" },
-    { firstname: "Yezzi", lastname: "Min l3b", email: "ymin@cocococo.com" },
+    { label: "Status", key: "status" },
   ];
 
   return (
-    <CSVLink data={data} headers={headers}>
+    <CSVLink data={testCases} headers={headers}>
       <Tooltip content="Export as csv">
         <ExportIcon label="export as csv" />
       </Tooltip>

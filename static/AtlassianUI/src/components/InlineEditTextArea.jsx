@@ -1,7 +1,4 @@
-import { useState, useCallback } from "react";
-
-import { jsx } from "@emotion/react";
-
+import { useState } from "react";
 import { Box, xcss } from "@atlaskit/primitives";
 import TextArea from "@atlaskit/textarea";
 import { token } from "@atlaskit/tokens";
@@ -11,9 +8,6 @@ import { fontSize as getFontSize } from "@atlaskit/theme/constants";
 import InlineEdit from "@atlaskit/inline-edit";
 
 const containerStyles = xcss({
-  //   paddingTop: 'space.100',
-  //   paddingRight: 'space.100',
-  //   paddingBottom: 'space.600',
   width: "100%",
   display: "flex",
   justifyContent: "space-between",
@@ -37,14 +31,7 @@ const innerBox = xcss({
   marginTop: "-12px",
   marginLeft: "8px",
 });
-const InlineEditCustomTextarea = ({
-  id,
-  label,
-  isChecked,
-  children,
-  toggleChecked,
-  editTest,
-}) => {
+const InlineEditCustomTextarea = ({ id, label, isChecked, children, toggleChecked, editTest }) => {
   const [isEditing, setEditing] = useState(false);
   const checkBoxlabel = () => {
     return <span onClick={() => setEditing(true)}>{label}</span>;
@@ -68,9 +55,7 @@ const InlineEditCustomTextarea = ({
             // @ts-ignore - textarea does not pass through ref as a prop
             <TextArea {...fieldProps} ref={ref} />
           )}
-          readView={() => (
-            <Box xcss={readViewContainerStyles}>{checkBoxlabel()}</Box>
-          )}
+          readView={() => <Box xcss={readViewContainerStyles}>{checkBoxlabel()}</Box>}
           // onConfirm={setEditValue}
           keepEditViewOpenOnBlur
           readViewFitContainerWidth
