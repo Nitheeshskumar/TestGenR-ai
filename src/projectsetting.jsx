@@ -17,10 +17,10 @@ import api, { route, properties } from "@forge/api";
 const App = () => {
   const context = useProductContext();
   const getStatuses = async () => {
-    console.log("calling");
+    console.log("fetching statuses");
     try {
       const response = await api
-        .asUser()
+        .asApp()
         .requestJira(route`/rest/api/3/status`, {
           headers: {
             Accept: "application/json",
@@ -28,20 +28,24 @@ const App = () => {
         });
       // https://developer.atlassian.com/cloud/jira/platform/rest/v3/api-group-status/#api-rest-api-3-statuses-get
 
-      const sdf = await response.json();
-      console.log("sdf", sdf);
-      return sdf.map(({ name, id }) => ({ name, id }));
+      const result = await response.json();
+      return result.map(({ name, id }) => ({ name, id }));
     } catch (e) {
-      console.log("error", e);
+      console.log("failed to get statuses", e);
       return "false";
     }
   };
   const getSelectedStatus = async () => {
-    let response = await properties
-      .onJiraProject(context.platformContext.projectKey)
-      .get("test-genR-trigger-status");
+    try {
+      console.log("fetching selected trigger status");
+      let response = await properties
+        .onJiraProject(context.platformContext.projectKey)
+        .get("test-genR-trigger-status");
 
-    return response;
+      return response;
+    } catch (e) {
+      console.log("failed to get trigger status", e);
+    }
   };
   const [statuses] = useAction(
     (value) => value,
