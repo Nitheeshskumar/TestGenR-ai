@@ -1,5 +1,5 @@
 import { CSVLink } from "react-csv";
-import ExportIcon from "@atlaskit/icon/glyph/export";
+import MediaServicesSpreadsheetIcon from "@atlaskit/icon/glyph/media-services/spreadsheet";
 import Tooltip from "@atlaskit/tooltip";
 
 export default function ExportExcel({ testCases }) {
@@ -12,7 +12,7 @@ export default function ExportExcel({ testCases }) {
   return (
     <CSVLink data={testCases} headers={headers}>
       <Tooltip content="Export as csv">
-        <ExportIcon label="export as csv" />
+        <MediaServicesSpreadsheetIcon label="export as csv" primaryColor="rgb(66, 82, 110)" />
       </Tooltip>
     </CSVLink>
   );

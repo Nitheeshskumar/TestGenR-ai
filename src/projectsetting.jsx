@@ -1,4 +1,4 @@
-import {
+import ForgeUI, {
   ProjectSettingsPage,
   render,
   Text,
@@ -12,7 +12,7 @@ import {
   useProductContext,
 } from "@forge/ui";
 import api, { route, properties } from "@forge/api";
-const App = () => {
+const TestGenRConfig = () => {
   const context = useProductContext();
   const getStatuses = async () => {
     console.log("fetching statuses");
@@ -105,4 +105,4 @@ const App = () => {
     </ProjectSettingsPage>
   );
 };
-export const run = render(<App />);
+export const run = render(<TestGenRConfig />);
