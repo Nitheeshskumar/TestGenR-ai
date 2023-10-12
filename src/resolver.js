@@ -1,33 +1,20 @@
 import Resolver from "@forge/resolver";
-import { storage } from "@forge/api";
 
 import { storageGetHelper, storageSetHelper } from "./helpers/storageHelper";
 
 const resolver = new Resolver();
 const getUniqueId = () => "_" + Math.random().toString(16).slice(2, 15);
 
-const getListKeyFromContext = (context) => {
-  const { localId: id } = context;
-  return id.split("/")[id.split("/").length - 1];
-};
 const getIssueKeyFromContext = (context) => context.extension.issue.key;
 
-// const getAll = async (listId) => {
-//   return (
-//     (await storage.get(listId)) || [
-//       { label: "Check if button present", id: "22", isChecked: true },
-//       { label: "Check if click happns", id: "d22", isChecked: false },
-//     ]
-//   );
-// };
-
-const getAll = async (listId, context) => {
-  return storageGetHelper(getIssueKeyFromContext(context)) || [];
+const getAll = async (context) => {
+  console.log("context");
+  return (await storageGetHelper(getIssueKeyFromContext(context))) || [];
 };
 
-resolver.define("get-all", ({ context }) => {
+resolver.define("get-all", async ({ context }) => {
   try {
-    return getAll(getListKeyFromContext(context), context);
+    return getAll(context);
   } catch (e) {
     console.log("error in resolver create", e);
   }
@@ -35,14 +22,16 @@ resolver.define("get-all", ({ context }) => {
 
 resolver.define("create", async ({ payload, context }) => {
   try {
-    const listId = getListKeyFromContext(context);
-    const records = await getAll(listId, context);
+    const records = await getAll(context);
     const id = getUniqueId();
     const newRecord = {
       id,
       ...payload,
     };
-    await storage.set(getListKeyFromContext(context), [...records, newRecord]);
+    await storageSetHelper(getListKeyFromContext(context), [
+      ...records,
+      newRecord,
+    ]);
     return newRecord;
   } catch (e) {
     console.log("error in resolver create", e);
@@ -51,8 +40,7 @@ resolver.define("create", async ({ payload, context }) => {
 
 resolver.define("update", async ({ payload, context }) => {
   try {
-    const listId = getListKeyFromContext(context);
-    let records = await getAll(listId, context);
+    let records = await getAll(context);
     records = records.map((item) => {
       if (item.id === payload.id) {
         return payload;
@@ -69,8 +57,7 @@ resolver.define("update", async ({ payload, context }) => {
 
 resolver.define("delete", async ({ payload, context }) => {
   try {
-    const listId = getListKeyFromContext(context);
-    let records = await getAll(listId, context);
+    let records = await getAll(context);
     records = records.filter((item) => item.id !== payload.id);
     // await storage.set(getListKeyFromContext(context), records);
     await storageSetHelper(getIssueKeyFromContext(context), records);

@@ -35,6 +35,7 @@ const innerBox = xcss({
   display: "flex",
   alignItems: "end",
   marginTop: "-12px",
+  marginLeft: "8px",
 });
 const InlineEditCustomTextarea = ({
   id,
@@ -44,10 +45,7 @@ const InlineEditCustomTextarea = ({
   toggleChecked,
   editTest,
 }) => {
-  console.log("isChecked", isChecked);
-  // const [editValue, setEditValue] = useState(label);
   const [isEditing, setEditing] = useState(false);
-  // const [isCheckbox, setIsCheckbox] = useState(isChecked);
   const checkBoxlabel = () => {
     return <span onClick={() => setEditing(true)}>{label}</span>;
   };
@@ -55,16 +53,6 @@ const InlineEditCustomTextarea = ({
     editTest(id, value);
     setEditing(false);
   };
-  // const toggleChecked = (event) => {
-  //   const selected = event.target.checked;
-  //   setIsCheckbox(selected);
-  //   console.log("checked", selected);
-  // };
-
-  // const toggleChecked = useCallback((event) => {
-  //   console.log(event.target);
-  //   setIsCheckbox((current) => !current);
-  // }, []);
 
   return (
     <Box xcss={containerStyles}>
@@ -89,6 +77,7 @@ const InlineEditCustomTextarea = ({
           isEditing={isEditing}
           onCancel={() => setEditing(false)}
           onConfirm={handleTextChange}
+          isRequired
           // onEdit={() => setEditing(true)}
         />
       </Box>

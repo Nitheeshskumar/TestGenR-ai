@@ -5,3 +5,6 @@ export const storageGetHelper = async (issueKey) =>
 
 export const storageSetHelper = async (issueKey, record) =>
   await properties.onJiraIssue(issueKey).set("test_gen", record);
+
+export const getSelectedStatus = async (projectKey) =>
+  await properties.onJiraProject(projectKey).get("test-genR-trigger-status");

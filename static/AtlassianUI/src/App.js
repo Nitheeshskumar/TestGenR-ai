@@ -26,6 +26,7 @@ import {
   LoadingContainer,
 } from "./Styles";
 import InlineEditCustomTextarea from "./components/InlineEditTextArea";
+import Flag from "./components/Flag";
 
 function App() {
   const [tests, setTests] = useState(undefined);
@@ -36,10 +37,9 @@ function App() {
   console.log("tests", tests);
   useEffect(() => {
     if (!isFetched) {
-      console.log("isfetched");
       setIsFetched(true);
       invoke("get-all").then((values) => {
-        console.log(values);
+        console.log("values", values);
         setTests(values);
       });
     }
@@ -101,7 +101,6 @@ function App() {
   };
 
   useEffect(() => {
-    console.log("useeffect");
     if (!tests) return;
     if (!tests.find((test) => test.isSaving || test.isDeleting)) return;
 
@@ -127,33 +126,6 @@ function App() {
       .then(setTests);
   }, [tests]);
 
-  // useEffect(() => {
-  //   console.log("useeffect");
-  //   if (!tests) return;
-  //   if (!tests.find((test) => test.isSaving || test.isDeleting)) return;
-
-  //   Promise.all(
-  //     tests.map((test) => {
-  //       if (test.isSaving && !test.id) {
-  //         return {
-  //           label: test.label,
-  //           isChecked: false,
-  //           id: Math.floor(Math.random() * 1000),
-  //         };
-  //       }
-  //       if (test.isSaving && test.id) {
-  //         return { id: test.id, label: test.label, isChecked: test.isChecked };
-  //       }
-  //       if (test.isDeleting && test.id) {
-  //         return false;
-  //       }
-  //       return test;
-  //     })
-  //   )
-  //     .then((saved) => saved.filter((a) => a))
-  //     .then(setTests);
-  // }, [tests]);
-
   if (!tests) {
     return (
       <Card>
@@ -164,8 +136,18 @@ function App() {
     );
   }
 
-  const completedCount = tests.filter((test) => test.isChecked).length;
-  const totalCount = tests.length;
+  if (tests.length == 0) {
+    return (
+      <Card>
+        <LoadingContainer>
+          <Flag />
+        </LoadingContainer>
+      </Card>
+    );
+  }
+  console.log("tests", tests);
+  const completedCount = tests?.filter((test) => test.isChecked).length || 0;
+  const totalCount = tests?.length || 0;
   return (
     <Card>
       <SummaryFooter>

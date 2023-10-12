@@ -2,6 +2,8 @@ permissions:
   scopes:
     - read:jira-work
     - write:jira-work
+    - manage:jira-configuration
+    - manage:jira-project
     - storage:app
   external:
     fetch:
@@ -12,24 +14,20 @@ permissions:
       - "unsafe-inline"
 modules:
   jira:issuePanel:
-    - key: testcase-validator-issuePanel
+    - key: testcase-issuePanel
       resource: AtlassianUI
-      title: testcase validator
+      title: Test(GenR)cases
       resolver:
         function: resolver
-      description: testcase validator
-      label: testcase validator
-      icon: https://developer.atlassian.com/platform/forge/images/icons/issue-panel-icon.svg
+      description: testcase generator
+      label: Testcases
+      icon: resource:AtlassianUI;issues.svg
       displayConditions:
         issueType: Story
-  jira:issueContext:
-    - key: testcase-validator-issueContext
-      function: checklist
-      title: testcase validator
-      label: testcase validator
-      icon: https://developer.atlassian.com/platform/forge/images/icons/issue-panel-icon.svg
-      displayConditions:
-        issueType: Story
+  jira:projectSettingsPage:
+    - key: projectSettingsPage
+      function: projectsetting
+      title: TestGenR config
   trigger:
     - key: testgenai-casegen
       function: testgen
@@ -38,13 +36,11 @@ modules:
   function:
     - key: testgen
       handler: testgen.run
-    - key: checklist
-      handler: checklist.run
     - key: resolver
       handler: resolver.handler
+    - key: projectsetting
+      handler: projectsetting.run
 resources:
-  - key: testgenUI
-    path: static/testgen/build
   - key: AtlassianUI
     path: static/AtlassianUI/build
 
