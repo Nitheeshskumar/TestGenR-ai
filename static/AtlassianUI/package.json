@@ -15,6 +15,7 @@
     "@atlaskit/textfield": "^5.6.8",
     "@atlaskit/theme": "^12.6.2",
     "@atlaskit/tokens": "^1.25.2",
+    "@atlaskit/tooltip": "^17.8.8",
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
     "@forge/bridge": "^2.6.0",

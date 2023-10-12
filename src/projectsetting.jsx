@@ -95,9 +95,9 @@ const App = () => {
         TestGenR uses openai to generate testcases after reading the story
         description. Add a trigger 'transition to status' to automatically
         generate the testcases. Its recommended to choose a status when the
-        story is given for test so that the story descriptions are finalized
-        before giving to QA and to avoid genereating testcases for stories that
-        don't require testing.
+        story is ready for test. This ensures the story descriptions are
+        finalized and avoid generating testcases for stories that don't require
+        testing.
       </Text>
       {statuses && (
         <Form onSubmit={onSubmit}>

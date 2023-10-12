@@ -25,6 +25,7 @@ export async function run(event, context) {
       const triggerStatus = await getSelectedStatus(
         event.issue.fields.project.key
       );
+
       //check if the new status is the trigger status
       if (event.associatedStatuses[1]?.name === triggerStatus) {
         console.log("checking if testcase exists");
@@ -33,6 +34,7 @@ export async function run(event, context) {
           console.log("testcase already exists");
           return true;
         }
+
         console.log("extracting story description");
         let extractedText = await getDescription(event.issue.id);
         extractedText =
@@ -40,12 +42,14 @@ export async function run(event, context) {
             ? extractedText
             : extractedText.join(".");
         console.log("extractedText: ", extractedText);
+
         const prompt =
           "Write test cases for the following story requirements" +
           extractedText;
         console.log("generating testcases from openai");
         const responseOpenAI = await callOpenAI(prompt);
         console.log("response from OpenAI", responseOpenAI);
+
         await storageSetHelper(event.issue.key, responseOpenAI);
         console.log("added testcases to story");
       }
