@@ -9,8 +9,9 @@ const GetDescription = () => {
   return (
     <>
       <span>
-        Move the story to <Tag text="READY FOR TEST" color="standard" /> status
-        to autogenerate Testcases based on description. Powered by openai
+        No Testcases available. Visit{" "}
+        <Tag text="TestGenR Config" color="standard" /> in Project settings for
+        usage. Powered by openai
       </span>
     </>
   );
