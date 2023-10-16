@@ -2,12 +2,12 @@ import getDescription from "./helpers/getdescription";
 import callOpenAI from "./helpers/callopenai";
 import { getSelectedStatus, storageGetHelper, storageSetHelper } from "./helpers/storageHelper";
 
-// Set-ExecutionPolicy -ExecutionPolicy Bypass -Scope Process
 export async function run(event, context) {
   try {
     console.log(`testgen invoked for ${event.issue.key} with changelog`, event.changelog);
 
-    //check if the event is triggered due to change in status. Change in status givesassociatedStatuses key
+    //check if the event is triggered due to change in status. Change in status gives
+    //associatedStatuses key
     //also check if the issue is a story
     if (event.associatedStatuses && event.issue?.fields?.issuetype?.name === "Story") {
       console.log("checking triggerStatus");

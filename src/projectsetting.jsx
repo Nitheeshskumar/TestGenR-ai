@@ -15,7 +15,7 @@ import api, { route, properties } from "@forge/api";
 const TestGenRConfig = () => {
   const context = useProductContext();
   const getStatuses = async () => {
-    console.log("fetching statuses");
+    console.log("TestGenr Config log: fetching statuses");
     try {
       const response = await api.asApp().requestJira(route`/rest/api/3/status`, {
         headers: {
@@ -27,18 +27,18 @@ const TestGenRConfig = () => {
       const result = await response.json();
       return result.map(({ name, id }) => ({ name, id }));
     } catch (e) {
-      console.log("failed to get statuses", e);
+      console.log("TestGenr Config log: failed to get statuses", e);
       return "false";
     }
   };
   const getSelectedStatus = async () => {
     try {
-      console.log("fetching selected trigger status");
+      console.log("TestGenr Config log: fetching selected trigger status");
       let response = await properties.onJiraProject(context.platformContext.projectKey).get("test-genR-trigger-status");
 
       return response;
     } catch (e) {
-      console.log("failed to get trigger status", e);
+      console.log("TestGenr Config log: failed to get trigger status", e);
     }
   };
   const [statuses] = useAction(
@@ -47,7 +47,7 @@ const TestGenRConfig = () => {
       return await getStatuses();
     }
   );
-  const [defaultselected] = useAction(
+  const [defaultselected, setDefaultselected] = useAction(
     (value) => value,
     async () => {
       return await getSelectedStatus();
@@ -55,26 +55,21 @@ const TestGenRConfig = () => {
   );
 
   useEffect(() => {
-    console.log("context", context.platformContext.projectKey);
     getStatuses();
   }, []);
   // Handles form submission, which is a good place to call APIs, or to set component state...
   const onSubmit = async (formData) => {
-    console.log("formdata", formData);
+    console.log("TestGenr Config log: submitting trigger status", formData);
     try {
       await properties
         .onJiraProject(context.platformContext.projectKey)
         .set("test-genR-trigger-status", formData.milestone);
+      setDefaultselected(formData.milestone);
     } catch (e) {
-      console.log("error on setting trigger status", e);
+      console.log("TestGenr Config log: error on setting trigger status", e);
     }
     return true;
   };
-
-  console.log("stauts", statuses);
-  console.log("defaultselected", defaultselected);
-  // The array of additional buttons.
-  // These buttons align to the right of the submit button.
 
   return (
     <ProjectSettingsPage>
