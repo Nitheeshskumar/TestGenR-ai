@@ -2,18 +2,32 @@ permissions:
   scopes:
     - read:jira-work
     - write:jira-work
+    - manage:jira-configuration
+    - manage:jira-project
     - storage:app
   external:
     fetch:
       backend:
         - https://api.openai.com
+  content:
+    styles:
+      - "unsafe-inline"
 modules:
-  jira:issueGlance:
-    - key: testcase-validator-glance
-      function: checklist
-      title: testcase validator
-      description: testcase validator
-      label: testcase validator
+  jira:issuePanel:
+    - key: testcase-issuePanel
+      resource: AtlassianUI
+      title: Test(GenR)cases
+      resolver:
+        function: resolver
+      description: testcase generator
+      label: Testcases
+      icon: resource:AtlassianUI;issues.svg
+      displayConditions:
+        issueType: Story
+  jira:projectSettingsPage:
+    - key: projectSettingsPage
+      function: projectsetting
+      title: TestGenR config
   trigger:
     - key: testgenai-casegen
       function: testgen
@@ -22,7 +36,13 @@ modules:
   function:
     - key: testgen
       handler: testgen.run
-    - key: checklist
-      handler: checklist.run
+    - key: resolver
+      handler: resolver.handler
+    - key: projectsetting
+      handler: projectsetting.run
+resources:
+  - key: AtlassianUI
+    path: static/AtlassianUI/build
+
 app:
   id: ari:cloud:ecosystem::app/5218dcc8-b35d-40ab-8224-655c4de8b904
