@@ -28,10 +28,7 @@ resolver.define("create", async ({ payload, context }) => {
       id,
       ...payload,
     };
-    await storageSetHelper(getListKeyFromContext(context), [
-      ...records,
-      newRecord,
-    ]);
+    await storageSetHelper(getIssueKeyFromContext(context), [...records, newRecord]);
     return newRecord;
   } catch (e) {
     console.log("error in resolver create", e);

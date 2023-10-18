@@ -1,13 +1,11 @@
 import api, { route } from "@forge/api";
 const getDescription = async (issuekey) => {
-  const commentsData = await api
-    .asApp()
-    .requestJira(route`/rest/api/3/issue/${issuekey}`, {
-      headers: {
-        Accept: "application/json",
-      },
-    });
-  const responseData = await commentsData.json();
+  const descriptionData = await api.asApp().requestJira(route`/rest/api/3/issue/${issuekey}`, {
+    headers: {
+      Accept: "application/json",
+    },
+  });
+  const responseData = await descriptionData.json();
   const jsonData = responseData.fields.description;
   let extractedText = [];
   //we are checking only for content type paragraph for now, formatted texts are included but not lists or images
