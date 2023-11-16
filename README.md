@@ -6,13 +6,16 @@ To install in your site [Installation link](https://developer.atlassian.com/cons
 
 See the [demo](https://youtu.be/QUb6g86jdoo) on how to use the app.
 
-No test cases
+#### No test cases
+
 ![No test cases](src/assets/Testgenr_notestcases.jpg)
 
-With generated test cases
+#### With generated test cases
+
 ![With generated test cases](src/assets/Testgenr_withtestcases.jpg)
 
-Config page
+#### Config page
+
 ![Config page](src/assets/Testgent_projectsettingpage.jpg)
 
 See [developer.atlassian.com/platform/forge/](https://developer.atlassian.com/platform/forge) for documentation and tutorials explaining Forge.
