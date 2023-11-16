@@ -1,5 +1,6 @@
 import { fetch } from "@forge/api";
-const callOpenAI = async (prompt) => {
+import { getSelectedApikey } from "./storageHelper";
+const callOpenAI = async (prompt, projectKey) => {
   const messages = [
     { role: "system", content: "You are a helpful coding assistant." },
     { role: "user", content: prompt },
@@ -45,19 +46,20 @@ const callOpenAI = async (prompt) => {
     function_call: { name: "test_case_generator" },
   };
 
-  // API call options
-  const options = {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${getOpenAPIKey()}`,
-      "Content-Type": "application/json",
-    },
-    redirect: "follow",
-    body: JSON.stringify(payload),
-  };
-
   // API call to OpenAI
   try {
+    const openaikey = await getSelectedApikey(projectKey);
+    // API call options
+    const options = {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${openaikey}`,
+        "Content-Type": "application/json",
+      },
+      redirect: "follow",
+      body: JSON.stringify(payload),
+    };
+    console.log("openaikey ", options);
     const response = await fetch(url, options);
     let result = "";
     if (response.status === 200) {
@@ -85,8 +87,10 @@ const callOpenAI = async (prompt) => {
 };
 
 // Get OpenAI API key
-export const getOpenAPIKey = () => {
-  return process.env.OPEN_API_KEY;
+export const getOpenAPIKey = async (projectKey) => {
+  const openaikey = await getSelectedApikey(projectKey);
+  return openaikey;
+  // return process.env.OPEN_API_KEY;
 };
 
 // Get OpenAI model

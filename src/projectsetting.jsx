@@ -41,6 +41,15 @@ const TestGenRConfig = () => {
       console.log("TestGenr Config log: failed to get trigger status", e);
     }
   };
+  const getApiKey = async () => {
+    try {
+      console.log("TestGenr Config log: fetching openai key");
+      let response = await properties.onJiraProject(context.platformContext.projectKey).get("test-genR-openaikey");
+      return response;
+    } catch (e) {
+      console.log("TestGenr Config log: failed to get openai key", e);
+    }
+  };
   const [statuses] = useAction(
     (value) => value,
     async () => {
@@ -48,12 +57,17 @@ const TestGenRConfig = () => {
     }
   );
   const [defaultselected, setDefaultselected] = useAction(
-    (value) => value,
+    (value, step) => step,
     async () => {
       return await getSelectedStatus();
     }
   );
-
+  const [defaultApiKey, setDefaultApiKey] = useAction(
+    (value, step) => step,
+    async () => {
+      return await getApiKey();
+    }
+  );
   useEffect(() => {
     getStatuses();
   }, []);
@@ -64,7 +78,9 @@ const TestGenRConfig = () => {
       await properties
         .onJiraProject(context.platformContext.projectKey)
         .set("test-genR-trigger-status", formData.milestone);
+      await properties.onJiraProject(context.platformContext.projectKey).set("test-genR-openaikey", formData.openaikey);
       setDefaultselected(formData.milestone);
+      setDefaultApiKey(formData.openaikey);
     } catch (e) {
       console.log("TestGenr Config log: error on setting trigger status", e);
     }
@@ -86,7 +102,12 @@ const TestGenRConfig = () => {
               <Option label={el.name} value={el.name} defaultSelected={defaultselected === el.name} />
             ))}
           </Select>
-          <TextField name="openaikey" label="Your openai key to use the service" placeholder="Your key" />
+          <TextField
+            name="openaikey"
+            label="Your openai key to use the service"
+            placeholder="Your key"
+            defaultValue={defaultApiKey}
+          />
           <Text>
             {" "}
             Go to{" "}

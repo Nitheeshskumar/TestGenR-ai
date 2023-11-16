@@ -11,7 +11,8 @@ export async function run(event, context) {
     //also check if the issue is a story
     if (event.associatedStatuses && event.issue?.fields?.issuetype?.name === "Story") {
       console.log("checking triggerStatus");
-      const triggerStatus = await getSelectedStatus(event.issue.fields.project.key);
+      const projectKey = event.issue.fields.project.key;
+      const triggerStatus = await getSelectedStatus(projectKey);
 
       //check if the new status is the trigger status
       if (event.associatedStatuses[1]?.name === triggerStatus) {
@@ -29,7 +30,7 @@ export async function run(event, context) {
 
         const prompt = "Write test cases for the following story requirements" + extractedText;
         console.log("generating testcases from openai");
-        const responseOpenAI = await callOpenAI(prompt);
+        const responseOpenAI = await callOpenAI(prompt, projectKey);
         console.log("response from OpenAI", responseOpenAI);
 
         await storageSetHelper(event.issue.key, responseOpenAI);
