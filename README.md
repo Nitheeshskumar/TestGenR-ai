@@ -32,7 +32,7 @@ With the rise of AI and machine learning, developers can now harness the power o
 
 ## What it does
 
-TestGenR is an openai powered Jira app that generates testcases based on story description.
+TestGenR is an OpenAI powered Jira app that generates testcases based on story description.
 
 1. Add a trigger status (like Ready for Test) upon whose transition will automatically read the story descriptions and adds a list of testcases under the story.
 2. The testcases are generated only if the issue type is a 'story' and will not regenerate testcases if it already exist.
@@ -43,7 +43,7 @@ TestGenR is an openai powered Jira app that generates testcases based on story d
 
 1. The TestGenR config panel is built using **Forge UI kit**
 2. TestGenR testcases is added as an **issuePanel** and is developed using **Custom UI** following **Atlaskit design system**, **resolver** that uses **Properties API**.
-3. The backend is developed in nodejs using **Forge API** and the generation of testcases is done using **OpenAi gpt3.5-turbo** model.
+3. The backend is developed in nodejs using **Forge API** and the generation of testcases is done using **OpenAI gpt3.5-turbo** model.
 
 ## Challenges we ran into
 
@@ -52,12 +52,12 @@ TestGenR is an openai powered Jira app that generates testcases based on story d
 3. The editing of testcases was initially done inside a modal in UI kit, but with custom UI,, the modal is no longer appearing in center of the page,(fits within the iframe), later we moved to IssuePanel and inline edit
 4. After moving to custom UI, we explored Atlaskit and inline edit components. We needed to add the checkbox label as the trigger of switching to inline edit which was not possible by default. We added the checkbox label as a React.node and added click handler to toggle the edit view while not triggering the checkbox selection.
 5. The responses from GPT model were conversation based, while we required json array only. This was overcame by using schema functions.
-6. Openai key limit was exhausted during development, hence we created another free trial account with different credentials.
+6. OpenAI key limit was exhausted during development, hence we created another free trial account with different credentials.
 
 ## Accomplishments that we're proud of
 
 1. Was able to identify a problem statement after our experiences with agile development.
-2. Learned to use various forge apis, ui kit, custom ui, openai.
+2. Learned to use various forge apis, ui kit, custom ui, OpenAI.
 3. Was able to migrate to IssueContext and finally to IssuePanel after seeing that IssueGlance was deprecated. Was able to migrate to Custom UI from easy to use UI kit. Overcame its limitations.
 4. Was able to integrate the checkbox label and inline edit of Atlaskit components
 
@@ -74,7 +74,7 @@ TestGenR is an openai powered Jira app that generates testcases based on story d
 
 1. Currently the app is only trained to read the paragraphs in story description. With further improvements, it can be made to read, lists, tables, images, code.
 2. Automatically send the exported excel to the integrated platforms like Zephyr.
-3. Code for testcases can also be generated with this app (currently the app is capable of doing it, but we haven't enabled so as to reduce the openai token billing). This will give an outline to write unit testcases for the developers.
+3. Code for testcases can also be generated with this app (currently the app is capable of doing it, but we haven't enabled so as to reduce the OpenAI token billing). This will give an outline to write unit testcases for the developers.
 
 # Clone and Make your changes
 

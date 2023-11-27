@@ -10,10 +10,13 @@ import ForgeUI, {
   Link,
   useAction,
   useProductContext,
+  SectionMessage,
+  useState,
 } from "@forge/ui";
 import api, { route, properties } from "@forge/api";
 const TestGenRConfig = () => {
   const context = useProductContext();
+  const [showMessage, setShowMessage] = useState(false);
   const getStatuses = async () => {
     console.log("TestGenr Config log: fetching statuses");
     try {
@@ -43,11 +46,11 @@ const TestGenRConfig = () => {
   };
   const getApiKey = async () => {
     try {
-      console.log("TestGenr Config log: fetching openai key");
+      console.log("TestGenr Config log: fetching OpenAI key");
       let response = await properties.onJiraProject(context.platformContext.projectKey).get("test-genR-openaikey");
       return response;
     } catch (e) {
-      console.log("TestGenr Config log: failed to get openai key", e);
+      console.log("TestGenr Config log: failed to get OpenAI key", e);
     }
   };
   const [statuses] = useAction(
@@ -71,6 +74,17 @@ const TestGenRConfig = () => {
   useEffect(() => {
     getStatuses();
   }, []);
+  //check if new key is submitted
+  const checkKeyUpdate = (newkey) => {
+    if (defaultApiKey !== newkey) {
+      setShowMessage(true);
+    }
+    return true;
+  };
+  function delay(ms) {
+    return new Promise((resolve) => setTimeout(resolve, ms));
+  }
+
   // Handles form submission, which is a good place to call APIs, or to set component state...
   const onSubmit = async (formData) => {
     console.log("TestGenr Config log: submitting trigger status", formData);
@@ -81,6 +95,7 @@ const TestGenRConfig = () => {
       await properties.onJiraProject(context.platformContext.projectKey).set("test-genR-openaikey", formData.openaikey);
       setDefaultselected(formData.milestone);
       setDefaultApiKey(formData.openaikey);
+      checkKeyUpdate(formData.openaikey);
     } catch (e) {
       console.log("TestGenr Config log: error on setting trigger status", e);
     }
@@ -90,9 +105,9 @@ const TestGenRConfig = () => {
   return (
     <ProjectSettingsPage>
       <Text>
-        TestGenR uses openai to generate testcases after reading the story description. Add a trigger 'transition to
-        status' to automatically generate the testcases. Its recommended to choose a status when the story is ready for
-        test. This ensures the story descriptions are finalized and avoid generating testcases for stories that don't
+        TestGenR uses OpenAI to generate test cases after reading the story description. Add a trigger 'transition to
+        status' to automatically generate the test cases. Its recommended to choose a status when the story is ready for
+        test. This ensures the story descriptions are finalized and avoid generating test cases for stories that don't
         require testing.
       </Text>
       {statuses && (
@@ -102,9 +117,10 @@ const TestGenRConfig = () => {
               <Option label={el.name} value={el.name} defaultSelected={defaultselected === el.name} />
             ))}
           </Select>
+
           <TextField
             name="openaikey"
-            label="Your openai key to use the service"
+            label="Your OpenAI key to use the service"
             placeholder="Your key"
             defaultValue={defaultApiKey}
           />
@@ -114,8 +130,9 @@ const TestGenRConfig = () => {
             <Link href="https://platform.openai.com/account/api-keys" openNewTab>
               API keys
             </Link>{" "}
-            to create new key from your openai account
+            to create new key from your OpenAI account
           </Text>
+          {showMessage && <SectionMessage title="API key updated" appearance="confirmation"></SectionMessage>}
         </Form>
       )}
     </ProjectSettingsPage>
