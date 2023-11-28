@@ -10,3 +10,8 @@ export const getSelectedStatus = async (projectKey) =>
 
 export const getSelectedApikey = async (projectKey) =>
   await properties.onJiraProject(projectKey).get("test-genR-openaikey");
+
+export const getGenStatus = async (issueKey) => await properties.onJiraIssue(issueKey).get("test-genR-status");
+
+export const setGenStatus = async (issueKey, stat) =>
+  await properties.onJiraIssue(issueKey).set("test-genR-status", stat);

@@ -1,22 +1,35 @@
 import Resolver from "@forge/resolver";
 
-import { storageGetHelper, storageSetHelper } from "./helpers/storageHelper";
+import { getGenStatus, storageGetHelper, storageSetHelper } from "./helpers/storageHelper";
 
 const resolver = new Resolver();
 const getUniqueId = () => "_" + Math.random().toString(16).slice(2, 15);
 
 const getIssueKeyFromContext = (context) => context.extension.issue.key;
-
+async function wait(ms) {
+  return new Promise((resolve) => {
+    setTimeout(resolve, ms);
+  });
+}
 const getAll = async (context) => {
-  console.log("context");
+  console.log("getting all testcases");
   return (await storageGetHelper(getIssueKeyFromContext(context))) || [];
 };
-
+const getGenrStatus = async (context) => {
+  const res = await getGenStatus(getIssueKeyFromContext(context));
+  console.log("res", res);
+  if (res !== "loading") {
+    return getAll(context);
+  } else {
+    await wait(2000);
+    return await getGenrStatus(context);
+  }
+};
 resolver.define("get-all", async ({ context }) => {
   try {
-    return getAll(context);
+    return getGenrStatus(context);
   } catch (e) {
-    console.log("error in resolver create", e);
+    console.log("error in resolver get-all", e);
   }
 });
 
@@ -60,7 +73,7 @@ resolver.define("delete", async ({ payload, context }) => {
     await storageSetHelper(getIssueKeyFromContext(context), records);
     return payload;
   } catch (e) {
-    console.log("error in resolver create", e);
+    console.log("error in resolver delete", e);
   }
 });
 
@@ -70,7 +83,15 @@ resolver.define("delete-all", async ({ context }) => {
     await storageSetHelper(getIssueKeyFromContext(context), []);
     return [];
   } catch (e) {
-    console.log("error in resolver create", e);
+    console.log("error in resolver delete-all", e);
+  }
+});
+
+resolver.define("get-status", async ({ context }) => {
+  try {
+    return (await storageGetHelper(getIssueKeyFromContext(context))) || [];
+  } catch (e) {
+    console.log("error in resolver get-status", e);
   }
 });
 

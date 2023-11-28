@@ -76,7 +76,7 @@ const callOpenAI = async (prompt, projectKey) => {
     } else {
       // const text = await response.text();
       // result = text;
-      console.log("status not 200");
+      console.log("status not 200: ", response);
       result = { result: [] };
     }
     return result.result.map((el) => ({ ...el, id: getUniqueId() }));

@@ -1,6 +1,6 @@
 import getDescription from "./helpers/getdescription";
 import callOpenAI from "./helpers/callopenai";
-import { getSelectedStatus, storageGetHelper, storageSetHelper } from "./helpers/storageHelper";
+import { getSelectedStatus, setGenStatus, storageGetHelper, storageSetHelper } from "./helpers/storageHelper";
 
 export async function run(event, context) {
   try {
@@ -17,6 +17,7 @@ export async function run(event, context) {
       //check if the new status is the trigger status
       if (event.associatedStatuses[1]?.name === triggerStatus) {
         console.log("checking if testcase exists");
+        setGenStatus(event.issue.key, "loading");
         const existingTests = await storageGetHelper(event.issue.key);
         if (existingTests && existingTests.length != 0) {
           console.log("testcase already exists");
@@ -28,7 +29,7 @@ export async function run(event, context) {
         extractedText = typeof extractedText === "string" ? extractedText : extractedText.join(".");
         console.log("extractedText: ", extractedText);
 
-        const prompt = "Write test cases for the following story requirements" + extractedText;
+        const prompt = "Write test cases for the following story requirements: " + extractedText;
         console.log("generating testcases from openai");
         const responseOpenAI = await callOpenAI(prompt, projectKey);
         console.log("response from OpenAI", responseOpenAI);
@@ -40,6 +41,7 @@ export async function run(event, context) {
   } catch (e) {
     console.log(`Unable to add testcases to issue ${event.issue.key}.`, e);
   } finally {
+    setGenStatus(event.issue.key, "done");
     console.log("completed invocation for ", event.issue.key);
     return true;
   }
