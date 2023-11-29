@@ -15,19 +15,21 @@ const getAll = async (context) => {
   console.log("getting all testcases");
   return (await storageGetHelper(getIssueKeyFromContext(context))) || [];
 };
-const getGenrStatus = async (context) => {
+const getGenrStatus = async (context, attempt) => {
   const res = await getGenStatus(getIssueKeyFromContext(context));
-  console.log("res", res);
+  console.log("res", res, attempt);
   if (res !== "loading") {
     return getAll(context);
+  } else if (attempt > 3) {
+    return "failed";
   } else {
-    await wait(2000);
-    return await getGenrStatus(context);
+    await wait(4000);
+    return await getGenrStatus(context, attempt + 1);
   }
 };
 resolver.define("get-all", async ({ context }) => {
   try {
-    return getGenrStatus(context);
+    return getGenrStatus(context, 1);
   } catch (e) {
     console.log("error in resolver get-all", e);
   }

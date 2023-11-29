@@ -29,12 +29,18 @@ function App() {
   const [tests, setTests] = useState(undefined);
   const [input, setInput] = useState("");
   const [isFetched, setIsFetched] = useState(false);
+  const [loading, setLoading] = useState(false);
   console.log("tests", tests);
   useEffect(() => {
     if (!isFetched) {
       setIsFetched(true);
       invoke("get-all").then((values) => {
         console.log("values", values);
+        if (values === "failed") {
+          setLoading(true);
+          return;
+        }
+
         setTests(values);
       });
     }
@@ -110,7 +116,16 @@ function App() {
       .then((saved) => saved.filter((a) => a))
       .then(setTests);
   }, [tests]);
-
+  console.log("loading", loading);
+  if (loading) {
+    return (
+      <Card>
+        <LoadingContainer>
+          <Flag loading />
+        </LoadingContainer>
+      </Card>
+    );
+  }
   if (!tests) {
     return (
       <Card>
@@ -130,7 +145,7 @@ function App() {
       </Card>
     );
   }
-  console.log("tests", tests);
+
   const completedCount = tests?.filter((test) => test.isChecked).length || 0;
   const totalCount = tests?.length || 0;
   return (
