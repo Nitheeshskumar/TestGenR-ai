@@ -41,7 +41,7 @@ export async function run(event, context) {
   } catch (e) {
     console.log(`Unable to add testcases to issue ${event.issue.key}.`, e);
   } finally {
-    setGenStatus(event.issue.key, "done");
+    await setGenStatus(event.issue.key, "done");
     console.log("completed invocation for ", event.issue.key);
     return true;
   }
