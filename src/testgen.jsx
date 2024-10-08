@@ -13,7 +13,7 @@ export async function run(event, context) {
       console.log("checking triggerStatus");
       const projectKey = event.issue.fields.project.key;
       const triggerStatus = await getSelectedStatus(projectKey);
-
+      console.log("to status: ", event.associatedStatuses[1]?.name, "while triggerstatus: ", triggerStatus);
       //check if the new status is the trigger status
       if (event.associatedStatuses[1]?.name === triggerStatus) {
         console.log("checking if testcase exists");
